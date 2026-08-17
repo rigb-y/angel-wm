@@ -1716,7 +1716,7 @@ EventHandleFn get_event_handle_fn(EventType event_type) {
 
 void evloop() {
     while (wm_running()) {
-        write_ws_state(get_current_workspace());
+        // write_ws_state(get_current_workspace());
 
         XEvent event;
         XNextEvent(dp, &event);
