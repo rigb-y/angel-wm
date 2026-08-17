@@ -1,0 +1,144 @@
+/*
+ * Copyright (c) 2026 rigb-y 
+ * SPDX-License-Identifier: MIT
+ */
+
+#ifndef ANGEL_TOKEN_H
+#define ANGEL_TOKEN_H
+
+#include "angel_strings.h"
+
+typedef enum PercentageMode {
+    PERCENTAGE_MODE_WIDTH,
+    PERCENTAGE_MODE_HEIGHT,
+    PERCENTAGE_MODE_UNKNOWN
+} PercentageMode;
+
+typedef enum TokenType {
+    TOKEN_NULL, TOKEN_COMMENT,
+    TOKEN_SEMICOLON, TOKEN_NEWLINE,
+    TOKEN_COMMA, TOKEN_IDENT,
+    TOKEN_STRING, TOKEN_INTEGER,
+    TOKEN_RBRACE, TOKEN_LBRACE,
+    TOKEN_EQUAL, TOKEN_DOLLAR_SIGN, 
+    TOKEN_ARROW, TOKEN_LBRACKET,
+    TOKEN_RBRACKET, TOKEN_EOF
+} TokenType;
+
+typedef enum IdentifierType {
+    IDENT_UNKNOWN, IDENT_EXEC, IDENT_LET, IDENT_SET_BACKGROUND, IDENT_DEFINE, 
+    IDENT_SET, IDENT_COLOR, IDENT_LAYOUTS, IDENT_BIND_COMMAND, IDENT_DECLARE,
+    IDENT_BIND, IDENT_TERMINAL, IDENT_ROOT_CURSOR,
+    IDENT_MAX_WIDTH, IDENT_MAX_HEIGHT, IDENT_MIN_WIDTH, IDENT_MIN_HEIGHT,
+    IDENT_GAP, IDENT_FULLSCREEN_BORDER_WIDTH, IDENT_WINDOW_RESIZE_INC,
+    IDENT_FLOAT_MOVE_STEP, IDENT_DEFAULT_WORKSPACE_LAYOUT, IDENT_MINIMIZED_HEIGHT, 
+    IDENT_RESIZE_BORDER, IDENT_FOCUSED_BORDER, IDENT_UNFOCUSED_BORDER,
+    IDENT_FLOAT_BORDER, IDENT_FULLSCREEN_BORDER, IDENT_ANGEL_MASTER_LEFT,
+    IDENT_ANGEL_MASTER_RIGHT, IDENT_ANGEL_SIMPLE_VERTICAL,
+    IDENT_ANGEL_SIMPLE_HORIZONTAL, IDENT_ANGEL_MONOCLE, IDENT_OPEN_TERM, IDENT_CLOSE_WIN,
+    IDENT_WIN_DOWN, IDENT_WIN_UP, IDENT_WIN_LEFT, IDENT_WIN_RIGHT, IDENT_MOVE_WIN_DOWN,
+    IDENT_MOVE_WIN_UP, IDENT_MOVE_WIN_LEFT, IDENT_MOVE_WIN_RIGHT, IDENT_ENTER_RESIZE,
+    IDENT_EXIT_RESIZE, IDENT_RESIZE_DOWN, IDENT_RESIZE_RIGHT, IDENT_RESIZE_LEFT,
+    IDENT_RESIZE_UP, IDENT_TOGGLE_FULLSCREEN, IDENT_TOGGLE_FLOAT,
+    IDENT_TOGGLE_FLOAT_FOCUS, IDENT_SWITCH_FLOAT_FOCUS, IDENT_MINIMIZE_WIN,
+    IDENT_TOGGLE_MINIMIZE_FOCUS, IDENT_TILE_MASTER_LEFT, IDENT_TILE_MASTER_RIGHT,
+    IDENT_TILE_SIMPLE_VERTICAL, IDENT_TILE_SIMPLE_HORIZONTAL, IDENT_TILE_MONOCLE,
+    IDENT_SWITCH_TO_W1, IDENT_SWITCH_TO_W2, IDENT_SWITCH_TO_W3, IDENT_SWITCH_TO_W4,
+    IDENT_SWITCH_TO_W5, IDENT_SWITCH_TO_W6, IDENT_SWITCH_TO_W7, IDENT_SWITCH_TO_W8,
+    IDENT_SWITCH_TO_W9, IDENT_SWITCH_TO_W10, IDENT_MOVE_TO_W1, IDENT_MOVE_TO_W2,
+    IDENT_MOVE_TO_W3, IDENT_MOVE_TO_W4, IDENT_MOVE_TO_W5, IDENT_MOVE_TO_W6,
+    IDENT_MOVE_TO_W7, IDENT_MOVE_TO_W8, IDENT_MOVE_TO_W9, IDENT_MOVE_TO_W10,
+    IDENT_TILED, IDENT_FLOAT, IDENT_CURSOR_STANDARD_POINTER,
+    IDENT_CURSOR_TEXT_INSERTION, IDENT_CURSOR_BUSY, IDENT_CURSOR_HAND_SHAPE,
+    IDENT_CURSOR_CROSSHAIR, IDENT_CURSOR_FOUR_DF_RESIZE, IDENT_CURSOR_HORIZONTAL_RESIZE,
+    IDENT_CURSOR_VERTICAL_RESIZE, IDENT_CURSOR_TOP_RESIZE, IDENT_CURSOR_BOTTOM_RESIZE,
+    IDENT_CURSOR_LEFT_RESIZE, IDENT_CURSOR_RIGHT_RESIZE, IDENT_CURSOR_TOP_LEFT_RESIZE,
+    IDENT_CURSOR_TOP_RIGHT_RESIZE, IDENT_CURSOR_BOTTOM_LEFT_RESIZE, IDENT_CURSOR_BOTTOM_RIGHT_RESIZE,
+    IDENT_RESTART_MANAGER, IDENT_QUIT_MANAGER, IDENT_UNMAP_WORKSPACE, IDENT_MAP_WORKSPACE,
+    IDENT_MAP_LATEST_UNMAP, IDENT_UNMAP_WINDOW, IDENT_GAP_INC, IDENT_GAP_DEC, 
+    IDENT_FOCUSED_BORDER_WIDTH, IDENT_UNFOCUSED_BORDER_WIDTH, IDENT_RESIZE_BORDER_WIDTH, IDENT_FLOAT_BORDER_WIDTH,
+    IDENT_MINIMIZED_BORDER_WIDTH, IDENT_SPACE_BETWEEN_MONOCLE, IDENT_MONOCLE_BORDER_WIDTH,
+    IDENT_TILE_ALL_FLOAT, IDENT_FLOAT_ALL_TILED, IDENT_MINIMIZE_ALL_WINDOWS,
+    IDENT_UNMINIMIZE_ALL_WINDOWS, IDENT_MINIMIZED_POSITION, IDENT_TOP, IDENT_BOTTOM,
+    IDENT_LEFT, IDENT_RIGHT, IDENT_MINIMIZE_LEFT, IDENT_MINIMIZE_RIGHT, IDENT_MINIMIZE_TOP,
+    IDENT_MINIMIZE_BOTTOM, IDENT_MINIMIZE_INC, IDENT_MINIMIZE_DEC, IDENT_MINIMIZED_HEIGHT_INC,
+    IDENT_GAP_INC_SIZE, IDENT_TILE_MASTER_LEFT_MONOCLE, IDENT_TILE_MASTER_RIGHT_MONOCLE, 
+    IDENT_TILE_MASTER_MASTER_LEFT, IDENT_TILE_MASTER_MASTER_RIGHT, IDENT_ANGEL_MASTER_LEFT_MONOCLE,
+    IDENT_ANGEL_MASTER_RIGHT_MONOCLE, IDENT_ANGEL_MASTER_MASTER_LEFT, IDENT_ANGEL_MASTER_MASTER_RIGHT,
+    IDENT_MOVE_WIN_MONITOR_DOWN, IDENT_MOVE_WIN_MONITOR_UP, IDENT_MOVE_WIN_MONITOR_LEFT, IDENT_MOVE_WIN_MONITOR_RIGHT,
+    IDENT_FOCUS_MODE_POINTER, IDENT_FOCUS_MODE_FOCUS, IDENT_CYCLE_TILED_FORWARD, IDENT_CYCLE_TILED_BACKWARD,
+    IDENT_ADJACENT, IDENT_END, IDENT_NEW_FOCUS_START, IDENT_NEW_FOCUS_START_ADJACENT,
+    IDENT_NEW_FOCUS_START_END, IDENT_NEXT_FOCUS_ON_CLOSE, IDENT_NEXT_FOCUS_ON_CLOSE_FOCUS_STACK, 
+    IDENT_NEXT_FOCUS_ON_CLOSE_NEXT, IDENT_USE_STACK, IDENT_NEXT
+} IdentifierType;
+
+typedef struct Token {
+    TokenType type; 
+    string lexeme;
+    string identifier;
+    int integer;
+    _Bool percentage;
+    PercentageMode percentage_mode;
+    IdentifierType ident_type;
+    int line_no;
+    int col_no;
+} Token;
+
+const char* token_type_to_string(TokenType);
+
+IdentifierType get_identifier_type(const Token*);
+
+void set_token(Token*, TokenType, int, int);
+Token create_token(TokenType, int, int);
+Token create_empty_token();
+
+void set_token_type(Token*, TokenType);
+TokenType get_token_type(const Token*);
+
+void set_token_line_no(Token*, int);
+void set_token_col_no(Token*, int);
+
+void set_token_line_col(Token*, int, int);
+
+int get_token_line_no(const Token*);
+int get_token_col_no(const Token*);
+
+void set_token_lexeme(Token*, string);
+const string* get_token_lexeme(const Token*);
+void set_token_identifier(Token*, string);
+void set_token_integer(Token*, int);
+const string* get_token_identifier(const Token*);
+IdentifierType get_token_identifier_type(const Token*);
+int get_token_integer(const Token*);
+
+void set_token_percentage_mode(Token*, PercentageMode);
+PercentageMode get_token_percentage_mode(const Token*);
+
+const char* copy_lexeme(const Token*);
+
+_Bool token_type_is(const Token*, TokenType);
+
+_Bool token_is_null(const Token*);
+_Bool token_is_delimeter(const Token*);
+_Bool token_is_eof(const Token*);
+_Bool token_is_comment(const Token*);
+_Bool token_is_semicolon(const Token*);
+_Bool token_is_newline(const Token*);
+_Bool token_is_comma(const Token*);
+_Bool token_is_ident(const Token*);
+_Bool token_is_string(const Token*);
+_Bool token_is_integer(const Token*);
+_Bool token_is_rbrace(const Token*);
+_Bool token_is_lbrace(const Token*);
+_Bool token_is_equal(const Token*);
+_Bool token_is_dollar_sign(const Token*);
+_Bool token_is_arrow(const Token*);
+_Bool token_is_lbracket(const Token*);
+_Bool token_is_rbracket(const Token*);
+
+void token_destroy(Token*);
+void token_refresh(Token*);
+
+void dump_token(Token*);
+
+#endif

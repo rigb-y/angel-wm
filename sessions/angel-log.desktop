@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=angel-log
+Comment=Elegant tiling window manager
+Exec=angel-log
+TryExec=angel-log
+Type=XSession
+X-LightDM-DesktopName=angel
+DesktopNames=angel
+Keywords=tiling;wm;windowmanager;window;manager;
