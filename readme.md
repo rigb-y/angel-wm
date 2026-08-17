@@ -1,9 +1,8 @@
 > Angel (awm) is a dynamic tiling window manager for X11 written in C using the Xlib api.
 
+https://github.com/user-attachments/assets/ef1698c3-68d0-44c8-86a4-163e684648d7
 
-https://github.com/user-attachments/assets/a3935e15-67c9-4f26-be53-c45f273e4af6
-
-<img width="1913" height="1077" alt="picture" src="https://github.com/user-attachments/assets/66844f2a-b653-4feb-b11c-0b06d1ecdb76" />
+<img width="1913" height="1077" alt="picture" src="https://github.com/user-attachments/assets/88179fe5-17a2-4577-bdeb-658039117cdc" />
 
 #### Core features
 
