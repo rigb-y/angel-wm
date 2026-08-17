@@ -50,11 +50,11 @@ By default Angel is installed to /usr/local/bin, adjust this behavior by setting
 sudo make install PREFIX=/usr 
 ```
 
-Then, choose Angel through your session manager or use `.xinitrc`
+Then, choose Angel through your session manager or use `.xinitrc` and `startx`.
 
 ```
 # ~/.xinitrc
-startx angel
+exec angel
 ```
 
 ### A quick note about multi-monitor and focus
