@@ -70,7 +70,7 @@ bind $mod-shift-p focus-mode-pointer
 
 See details for more binds below.
 
-Once instead resize mode, focus changes from focus-follows-mouse to click-to-focus.
+Once inside resize mode, focus changes from focus-follows-mouse to click-to-focus.
 
 ### Configuration
 
