@@ -130,4 +130,6 @@ void action_new_focus_start_end(const XKeyEvent*);
 void action_next_focus_on_close_use_stack(const XKeyEvent*);
 void action_next_focus_on_close_next(const XKeyEvent*);
 
+void action_toggle_persistent(const XKeyEvent*);
+
 #endif

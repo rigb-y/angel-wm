@@ -22,6 +22,7 @@
 #include "unmapped_client.h"
 #include "docks.h"
 #include "utils.h"
+#include "ewmh.h"
 
 #include <X11/Xlib.h>
 #include <stddef.h>
@@ -35,12 +36,20 @@ static void move_client_to_monitor_from_cl(Client*, Monitor*, Monitor*);
 static void move_client_to_monitor_from_fl(Client*, Monitor*, Monitor*);
 static void move_client_to_monitor_from_ml(Client*, Monitor*, Monitor*);
 static void move_client_to_monitor_from_dl(Client*, Monitor*, Monitor*);
+static void move_client_to_monitor_from_ul(Client*, Monitor*, Monitor*);
 
 static void absorb_monitor_cl(Monitor*, Monitor*);
 static void absorb_monitor_fl(Monitor*, Monitor*);
 static void absorb_monitor_ml(Monitor*, Monitor*);
 static void absorb_monitor_ul(Monitor*, Monitor*);
 static void absorb_monitor_dl(Monitor*, Monitor*);
+
+static void monitor_move_persistent_tiled(Monitor*, Monitor*, int);
+static void monitor_move_persistent_float(Monitor*, Monitor*, int);
+static void monitor_move_persistent_minimized(Monitor*, Monitor*, int);
+static void monitor_move_persistent_unmapped(Monitor*, Monitor*, int);
+
+static void monitor_change_client_state_after_move(Client*, int);
 
 void init_monitor(
     Monitor* monitor,
@@ -447,6 +456,19 @@ void move_client_to_monitor_from_dl(Client* client, Monitor* from, Monitor* to) 
     docks_push(get_monitor_dl(to), dock);
 }
 
+void move_client_to_monitor_from_ul(Client* client, Monitor* from, Monitor* to) {
+    if (client == NULL || from == NULL || to == NULL || from == to)
+        return;
+
+    UnmappedClient* unmapped = ul_find_from_client(
+        get_monitor_ul(from),
+        client
+    );
+
+    ul_remove(get_monitor_ul(from), unmapped);
+    ul_push(get_monitor_ul(to), unmapped);
+}
+
 void move_client_to_monitor(Client* client, Monitor* from, Monitor* to) {
     if (client == NULL 
         || from == NULL 
@@ -459,6 +481,8 @@ void move_client_to_monitor(Client* client, Monitor* from, Monitor* to) {
         move_client_to_monitor_from_ml(client, from, to);
     else if (client_is_dock(client))
         move_client_to_monitor_from_dl(client, from, to);
+    else if (!is_client_mapped(client))
+        move_client_to_monitor_from_ul(client, from, to);
     else
         move_client_to_monitor_from_cl(client, from, to);
 }
@@ -657,4 +681,92 @@ void move_docks_to_monitor(Monitor* monitor, Docks* docks, int to_workspace) {
             to_workspace
         );
     }
+}
+
+void monitor_change_client_state_after_move(Client* client, int to_workspace) {
+    if (client == NULL || !workspace_is_valid(to_workspace)) return;
+
+    client_set_on_workspace(client, to_workspace);
+    ewmh_store_workspace_num(get_client_win(client), (unsigned long) to_workspace);
+    client_set_was_configured(client, false);
+}
+
+void monitor_move_persistent_tiled(Monitor* from, Monitor* to, int to_workspace) {
+    if (from == NULL || to == NULL || from == to) return;
+
+    Client* curr = cl_head(get_monitor_cl(from));
+    while (curr != NULL) {
+        if (!client_persistent(curr)) {
+            curr=curr->next;
+            continue;
+        }
+
+        move_client_to_monitor(curr, from, to);
+        monitor_change_client_state_after_move(curr, to_workspace);
+
+        curr = curr->next;
+    }
+}
+
+void monitor_move_persistent_float(Monitor* from, Monitor* to, int to_workspace) {
+    if (from == NULL || to == NULL || from == to) return;
+
+    DetachedClient* curr = fl_head(get_monitor_fl(from));
+    while (curr != NULL) {
+        Client* client = get_client_from_detached(curr);
+        if (!client_persistent(client)) {
+            curr=curr->next;
+            continue;
+        }
+
+        move_client_to_monitor(client, from, to);
+        monitor_change_client_state_after_move(client, to_workspace);
+
+        curr = curr->next;
+    }
+}
+
+void monitor_move_persistent_minimized(Monitor* from, Monitor* to, int to_workspace) {
+    if (from == NULL || to == NULL || from == to) return;
+
+    MinimizedClient* curr = ml_head(get_monitor_ml(from));
+    while (curr != NULL) {
+        Client* client = get_client_from_minimized(curr);
+        if (!client_persistent(client)) {
+            curr=curr->next;
+            continue;
+        }
+
+        move_client_to_monitor(client, from, to);
+        monitor_change_client_state_after_move(client, to_workspace);
+
+        curr = curr->next;
+    }
+}
+
+void monitor_move_persistent_unmapped(Monitor* from, Monitor* to, int to_workspace) {
+    if (from == NULL || to == NULL || from == to) return;
+
+    UnmappedClient* curr = ul_head(get_monitor_ul(from));
+    while (curr != NULL) {
+        Client* client = get_client_from_unmapped(curr);
+        if (!client_persistent(client)) {
+            curr=curr->next;
+            continue;
+        }
+
+        move_client_to_monitor(client, from, to);
+        monitor_change_client_state_after_move(client, to_workspace);
+
+        curr = curr->next;
+    }
+}
+
+void monitor_move_persistent(Monitor* from, Monitor* to, int to_workspace) {
+    if (from == NULL || to == NULL || from == to) return;
+
+    monitor_move_persistent_tiled(from, to, to_workspace);
+    monitor_move_persistent_float(from, to, to_workspace);
+    monitor_move_persistent_minimized(from, to, to_workspace);
+    monitor_move_persistent_unmapped(from, to, to_workspace);
 }

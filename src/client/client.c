@@ -49,8 +49,19 @@ void init_client(Client* client, Window win) {
     client->unmap_after_map_notify = false;
     client->unmapped_from_workspace_switch = false;
     client->mapped_from_workspace_switch = false;
+    client->persistent = false;
 
     client->dock = false;
+}
+
+_Bool client_persistent(Client* client) {
+    if (client == NULL) return false;
+    return client->persistent;
+}
+
+void client_set_persistent(Client* client, _Bool persistent) {
+    if (client == NULL) return;
+    client->persistent = persistent;
 }
 
 int client_pending_unmaps(Client* client) {

@@ -109,4 +109,6 @@ void absorb_monitor(Monitor*, Monitor*);
 void update_monitor_on_strut_intersect(Monitor*, StrutSide, int, int, int, int);
 void move_docks_to_monitor(Monitor*, Docks*, int);
 
+void monitor_move_persistent(Monitor*, Monitor*, int);
+
 #endif

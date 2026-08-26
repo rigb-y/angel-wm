@@ -173,12 +173,12 @@ static const IdentifierStringPair ident_str_to_ident_type[] = {
     {"end", IDENT_END},
     {"new-focus-start-adjacent", IDENT_NEW_FOCUS_START_ADJACENT},
     {"new-focus-start-end", IDENT_NEW_FOCUS_START_END},
-    {"next-focus-on-close",IDENT_NEXT_FOCUS_ON_CLOSE},
-    {"next-focus-on-close-focus-stack",IDENT_NEXT_FOCUS_ON_CLOSE_FOCUS_STACK},
-    {"next-focus-on-close-next",IDENT_NEXT_FOCUS_ON_CLOSE_NEXT},
-    {"use-stack",IDENT_USE_STACK},
-    {"next",IDENT_NEXT}
-
+    {"next-focus-on-close", IDENT_NEXT_FOCUS_ON_CLOSE},
+    {"next-focus-on-close-focus-stack", IDENT_NEXT_FOCUS_ON_CLOSE_FOCUS_STACK},
+    {"next-focus-on-close-next", IDENT_NEXT_FOCUS_ON_CLOSE_NEXT},
+    {"use-stack", IDENT_USE_STACK},
+    {"next", IDENT_NEXT},
+    {"toggle-persistent", IDENT_TOGGLE_PERSISTENT}
 };
 
 static const TokenTypeStringPair token_type_to_string_map[] = {

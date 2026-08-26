@@ -60,11 +60,15 @@ typedef struct Client {
     _Bool unmap_after_map_notify;
     _Bool unmapped_from_workspace_switch;
     _Bool mapped_from_workspace_switch;
+    _Bool persistent;
 
     _Bool dock;
 } Client;
 
 void init_client(Client*, Window);
+
+_Bool client_persistent(Client*);
+void client_set_persistent(Client*, _Bool);
 
 int client_pending_unmaps(Client*);
 void inc_pending_unmap(Client*);

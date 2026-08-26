@@ -483,13 +483,10 @@ void move_client_to_workspace(Client* client, int workspace) {
 
     if (client_is_float(client))
         move_from_current_float_list(monitor, dest, client, workspace);
-
     else if (client_is_minimized(client))
         move_from_current_minimized_list(monitor, dest, client, workspace);
-
     else if (client_is_dock(client))
         move_from_current_dock_list(monitor, dest, client, workspace);
-
     else
         move_from_current_client_list(monitor, dest, client, workspace);
 }

@@ -41,6 +41,8 @@ static void monitors_cancel_cancel_fl_pending_unmaps(const Monitors*);
 static void monitors_cancel_cancel_ml_pending_unmaps(const Monitors*);
 static void monitors_cancel_cancel_dl_pending_unmaps(const Monitors*);
 
+static void move_persistent_docks_to_workspace(int, int);
+
 static int monitors_get_left_position_extremes(
     const Monitors*,
     MinOrMaxFn,
@@ -1172,7 +1174,6 @@ void move_persistent_docks_to_workspace(int from, int to) {
     ) return;
 
     Monitors* from_monitors = get_workspace_monitors(from);
-    Monitors* to_monitors = get_workspace_monitors(to);
 
     Monitor* from_curr = from_monitors->head;
     while (from_curr != NULL) {
@@ -1186,5 +1187,23 @@ void move_persistent_docks_to_workspace(int from, int to) {
         move_docks_to_monitor(symmetric, docks, to);
 
         from_curr = from_curr->next;
+    }
+}
+
+void move_persistent_to_workspace(int from, int to) {
+    if (!workspace_is_valid(from)
+        || !workspace_is_valid(to)
+    ) return;
+
+    move_persistent_docks_to_workspace(from, to);
+
+    Monitor* curr = get_workspace_monitors(from)->head;
+    while (curr != NULL) {
+        monitor_move_persistent(
+            curr,
+            get_symmetric_monitor(curr, to),
+            to
+        );
+        curr = curr->next;
     }
 }

@@ -112,7 +112,7 @@ static const IdentifierType valid_binds[] = {
     IDENT_CYCLE_TILED_FORWARD, IDENT_CYCLE_TILED_BACKWARD,
     IDENT_NEW_FOCUS_START_ADJACENT, IDENT_NEW_FOCUS_START_END,
     IDENT_NEXT_FOCUS_ON_CLOSE_FOCUS_STACK,
-    IDENT_NEXT_FOCUS_ON_CLOSE_NEXT
+    IDENT_NEXT_FOCUS_ON_CLOSE_NEXT, IDENT_TOGGLE_PERSISTENT
 };
 
 static const IdentifierType valid_cursors[] = {
@@ -320,7 +320,8 @@ static const IdentifierActionPair ident_type_to_action_fn[] = {
     {IDENT_NEW_FOCUS_START_END, action_new_focus_start_end},
     {IDENT_NEW_FOCUS_START_ADJACENT, action_new_focus_start_adjacent},
     {IDENT_NEXT_FOCUS_ON_CLOSE_FOCUS_STACK, action_next_focus_on_close_use_stack},
-    {IDENT_NEXT_FOCUS_ON_CLOSE_NEXT, action_next_focus_on_close_next}
+    {IDENT_NEXT_FOCUS_ON_CLOSE_NEXT, action_next_focus_on_close_next},
+    {IDENT_TOGGLE_PERSISTENT, action_toggle_persistent}
 };
 
 KeybindActionFn get_action_fn(IdentifierType type) {

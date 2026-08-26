@@ -1276,10 +1276,23 @@ void action_switch_workspace(int workspace) {
 
     int ws_before_switch = get_current_workspace();
 
-    move_persistent_docks_to_workspace(
-        ws_before_switch, 
-        workspace
+    Client* focus = get_current_focus();
+    Monitor* focus_monitor = reconcile_monitor_from_focus(
+        ws_before_switch,
+        focus
     );
+
+    move_persistent_to_workspace(ws_before_switch, workspace);
+
+    if (focus != NULL && get_client_on_workspace(focus) != ws_before_switch) {
+        set_current_focus(
+            get_next_focus(
+                focus_monitor,
+                FS_REMOVE
+            ),
+            CurrentTime
+        );
+    }
 
     set_focus_before_workspace_switch(
         ws_before_switch, get_current_focus()
@@ -1305,6 +1318,8 @@ void action_switch_workspace(int workspace) {
     workspace_cancel_cancel_pending_maps(workspace);
     workspace_cancel_pending_unmaps(workspace);
     map_current_workspace();
+
+    arrange_monitors(CurrentTime, JUSTIFY_FOCUS);
 
     write_ws_state(workspace);
 }
@@ -1704,6 +1719,13 @@ void action_next_focus_on_close_use_stack(const XKeyEvent* key_event) {
 
 void action_next_focus_on_close_next(const XKeyEvent* key_event) {
     set_focus_end(FOCUS_END_NEXT);
+}
+
+void action_toggle_persistent(const XKeyEvent* key_event) {
+    Client* focus = get_current_focus();
+    if (focus == NULL) return;
+
+    client_set_persistent(focus, !client_persistent(focus));
 }
 
 EventHandleFn get_event_handle_fn(EventType event_type) {

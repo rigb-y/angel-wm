@@ -102,7 +102,8 @@ const DefaultBind default_binds[] = {
     {XK_a, DEFAULT_MOD | SHIFT, action_new_focus_start_adjacent},
     {XK_e, DEFAULT_MOD | SHIFT, action_new_focus_start_end},
     {XK_a, DEFAULT_MOD | ALT, action_next_focus_on_close_use_stack},
-    {XK_e, DEFAULT_MOD | ALT, action_next_focus_on_close_next}
+    {XK_e, DEFAULT_MOD | ALT, action_next_focus_on_close_next},
+    {XK_p, DEFAULT_MOD, action_toggle_persistent}
 };
 
 void set_action_bind(ActionBind* action_bind, KeyMap map, KeybindActionFn action) {

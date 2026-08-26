@@ -91,6 +91,7 @@ void monitors_update_internal_data(Monitors*, XRRMonitorInfo*, int);
 
 void adjust_monitors_for_strut(Monitors*, StrutSide, int, int, int, int);
 Monitor* move_client_to_monitor_with_position(Monitors*, Monitor*, Client*);
-void move_persistent_docks_to_workspace(int, int);
+
+void move_persistent_to_workspace(int, int);
 
 #endif
