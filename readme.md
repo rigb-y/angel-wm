@@ -31,6 +31,10 @@ https://github.com/user-attachments/assets/ef1698c3-68d0-44c8-86a4-163e684648d7
 * Window resizing
 * Mapping / unmapping instead of minimizing (a mapped window is one visible on the screen. An unmapped window is a window that exists but is not viewable.)
 
+### Note about multi-monitor
+
+If you update your display configuration with `xrandr`, please refresh the window manager with your refresh bind. This behavior is the result of a bug and will be fixed soon.
+
 ### Dependencies
 
 Angel's build  has three dependencies: `x11`, `xrandr`, and `xwallpaper`.
