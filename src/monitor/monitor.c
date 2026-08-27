@@ -50,6 +50,7 @@ static void monitor_move_persistent_minimized(Monitor*, Monitor*, int);
 static void monitor_move_persistent_unmapped(Monitor*, Monitor*, int);
 
 static void monitor_change_client_state_after_move(Client*, int);
+static void monitor_change_fullscreen_state_after_move(Client*, Monitor*, Monitor*);
 
 void init_monitor(
     Monitor* monitor,
@@ -693,6 +694,16 @@ void monitor_change_client_state_after_move(Client* client, int to_workspace) {
     client_set_was_configured(client, false);
 }
 
+void monitor_change_fullscreen_state_after_move(Client* client, Monitor* from, Monitor* to) {
+    if (client == NULL || from == NULL || to == NULL || from == to) return;
+
+    if (get_monitor_fullscreen(from) != client)
+        return;
+
+    set_monitor_fullscreen(from, NULL);
+    set_monitor_fullscreen(to, client);
+}
+
 void monitor_move_persistent_tiled(Monitor* from, Monitor* to, int to_workspace) {
     if (from == NULL || to == NULL || from == to) return;
 
@@ -703,7 +714,9 @@ void monitor_move_persistent_tiled(Monitor* from, Monitor* to, int to_workspace)
             continue;
         }
 
+
         move_client_to_monitor(curr, from, to);
+        monitor_change_fullscreen_state_after_move(curr, from, to);
         monitor_change_client_state_after_move(curr, to_workspace);
 
         curr = curr->next;
@@ -722,6 +735,7 @@ void monitor_move_persistent_float(Monitor* from, Monitor* to, int to_workspace)
         }
 
         move_client_to_monitor(client, from, to);
+        monitor_change_fullscreen_state_after_move(client, from, to);
         monitor_change_client_state_after_move(client, to_workspace);
 
         curr = curr->next;
@@ -740,6 +754,7 @@ void monitor_move_persistent_minimized(Monitor* from, Monitor* to, int to_worksp
         }
 
         move_client_to_monitor(client, from, to);
+        monitor_change_fullscreen_state_after_move(client, from, to);
         monitor_change_client_state_after_move(client, to_workspace);
 
         curr = curr->next;
@@ -758,6 +773,7 @@ void monitor_move_persistent_unmapped(Monitor* from, Monitor* to, int to_workspa
         }
 
         move_client_to_monitor(client, from, to);
+        monitor_change_fullscreen_state_after_move(client, from, to);
         monitor_change_client_state_after_move(client, to_workspace);
 
         curr = curr->next;
