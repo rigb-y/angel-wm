@@ -76,6 +76,32 @@ See details for more binds below.
 
 Once inside resize mode, focus changes from focus-follows-mouse to click-to-focus.
 
+### Persistent windows
+
+A persistent window is a window with blatant disregard for workspaces. That is, it appears on all workspaces. All windows are non-persistent by default.
+
+To make a window persistent, give it focus and activate the requisite bind.
+
+```
+bind <...> toggle-persistent 
+```
+
+For example:
+
+```
+bind $mod-p toggle-persistent
+```
+
+As you may have guessed by the use of the word `toggle`, this bind can also be used to make a persistent window non-persistent.
+
+### Floating windows
+
+Windows can be made float by using the `toggle-float` bind. Floating windows can be moved and resized with both the keyboard and the pointer.
+
+If you wish to move floating windows with the pointer, use `$mod + left click`. To resize floating windows with the pointer, hold `$mod + right click` and move the mouse. 
+
+Please see the note about the `mod` variable and floating window pointer binds [below](#mod).
+
 ### Configuration
 
 Angel is configured by placing a `angel.conf` inside `$HOME/.config/angel`. An example configuration file is found in `angel/configs`
@@ -123,7 +149,28 @@ define terminal = $term
 
 #### Mod
 
-Set a preferred modifier key by defining a variable (conventionally named mod) with one of: `super`, `ctrl`, `alt`, `shift`. This variable can then be used during bind sets.
+Set a preferred modifier key by defining a variable (preferably named `mod`) with one of: `super`, `ctrl`, `alt`, `shift`. This variable can then be used during bind sets.
+
+The `mod` variable is special because Angel's configuration compiler will detect its change and set the internal modifier accordingly. For the moment, this only affects dragging and resizing floating windows.
+
+That is, if `mod` is set to shift:
+
+```
+let mod = shift
+```
+
+dragging and resizing floating windows is then done by holding shift and using the correct pointer button. Note that you may still set binds to use something like `super` by either specifying `super` directly in the bind statement or by defining another variable to use.
+
+```
+bind super-... <action>
+
+# or
+
+let bind-modifier=super
+bind $bind-modifier-... <action>
+```
+
+If no `mod` variable is set, `super` is used.
 
 #### Exec
 
@@ -413,3 +460,4 @@ Action                      | Description                                       
 `new-focus-start-end`       | Hot change `new-focus-start` define                  |
 `next-focus-on-close-focus-stack` | Hot change `next-focus-on-close` define        |
 `next-focus-on-close-next`  | Hot change `next-focus-on-close` define              |
+`toggle-persistant`         | Toggle the workspace persistence behavior of a window |
