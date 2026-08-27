@@ -477,6 +477,8 @@ void move_client_to_monitor(Client* client, Monitor* from, Monitor* to) {
         || !is_client_mapped(client)
     ) return;
 
+    if (client_is_float(client))
+        move_client_to_monitor_from_fl(client, from, to);
     else if (client_is_minimized(client))
         move_client_to_monitor_from_ml(client, from, to);
     else if (client_is_dock(client))
