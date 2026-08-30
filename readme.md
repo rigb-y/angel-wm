@@ -35,6 +35,10 @@ https://github.com/user-attachments/assets/ef1698c3-68d0-44c8-86a4-163e684648d7
 
 If you update your display configuration with `xrandr`, please refresh the window manager with your refresh bind. This behavior is the result of a bug and will be fixed soon.
 
+### Quick remark
+
+If on startup for whatever reason no windows will appear, try hitting your refresh bind. This behavior 
+
 ### Dependencies
 
 Angel's build  has three dependencies: `x11`, `xrandr`, and `xwallpaper`.

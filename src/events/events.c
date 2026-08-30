@@ -456,16 +456,15 @@ KeybindActionFn get_action(const KeyMap* keymap) {
 void dispatch_keybind(const XKeyEvent* key_event, const KeyMap* keymap) {
     if (key_event == NULL || keymap == NULL) return;
 
-    KeybindActionFn action = get_action(keymap);
-    if (action != NULL) {
-        action(key_event);
+    const char* command = command_find(*keymap);
+    if (command != NULL) {
+        exec_command(command);
         return;
     }
 
-    const char* command = command_find(*keymap);
-    if (command == NULL) return;
-
-    exec_command(command);
+    KeybindActionFn action = get_action(keymap);
+    if (action != NULL)
+        action(key_event);
 }
 
 void handle_map_request(const XEvent* event) {
