@@ -196,10 +196,6 @@ void set_root_cursor(Cursor cursor) {
 void raise_window(Window win) {
     if (win == None) return;
 
-    Window top_most_managed = get_top_most_managed();
-    if (top_most_managed == win) 
-        return;
-
     Window under = bottom_most_overlay();
     if (under == None) {
         XRaiseWindow(dp, win);
@@ -253,15 +249,43 @@ Window bottom_most_overlay() {
         )
     ) return None;
 
+    Window bmo = None;
+    unsigned int bmo_i = 0;
     for (unsigned int i = 0; i < n_children; ++i) {
         if (is_mapped_and_override_redirect(children[i])) {
             XFree(children);
-            return children[i];
+            bmo = children[i];
+            bmo_i = i;
+            break;
         }
     }
 
+    if (bmo == None) {
+        XFree(children);
+        return None;
+    }
+
+    // Move any managed that are somehow above
+    // the lowest overlay below the overlay
+    for (unsigned int i = bmo_i+1; i < n_children; ++i) {
+        if (!is_managed(children[i]))
+            continue;
+
+        XWindowChanges changes = {
+            .stack_mode = Below,
+            .sibling = bmo
+        };
+
+        XConfigureWindow(
+            dp,
+            children[i],
+            CWStackMode | CWSibling,
+            &changes
+        );
+    }
+
     XFree(children);
-    return None;
+    return bmo;
 }
 
 Window get_top_most_managed() {
