@@ -37,7 +37,23 @@ If you update your display configuration with `xrandr`, please refresh the windo
 
 ### Quick remark
 
-If on startup for whatever reason no windows will appear, try hitting your refresh bind. This behavior 
+If on startup for whatever reason no windows will appear, try hitting your refresh bind. This behavior is a result of `xrandr` configuring **after** `Angel` becomes present as a running process. For example, if you have something like 
+
+```
+exec "xrandr --output eDP-1 \
+    --mode 1920x1080 \
+    --rate 144 \
+    --output HDMI-1-0 \
+    --mode 1920x1080 \
+    --rate 144 \
+    --same-as eDP-1 \
+    --output DP-1 \
+    --mode 1920x1080 \
+    --rate 144 \
+    --left-of HDMI-1-0"
+```
+
+in your configuration. Ensure `xrandr` configures before `Angel` becomes active by moving this configure step into `.xinitrc`.
 
 ### Dependencies
 
