@@ -1,7 +1,7 @@
 .DEFAULT_GOAL = all
 
 CC := gcc
-CF := -g -std=c23 -MMD -MP \
+CF := -std=c23 -MMD -MP \
 	-Isrc \
 	-Isrc/logging \
 	-Isrc/error \
