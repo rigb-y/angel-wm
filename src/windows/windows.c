@@ -253,7 +253,6 @@ Window bottom_most_overlay() {
     unsigned int bmo_i = 0;
     for (unsigned int i = 0; i < n_children; ++i) {
         if (is_mapped_and_override_redirect(children[i])) {
-            XFree(children);
             bmo = children[i];
             bmo_i = i;
             break;
