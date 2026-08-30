@@ -102,6 +102,14 @@ If you wish to move floating windows with the pointer, use `$mod + left click`. 
 
 Please see the note about the `mod` variable and floating window pointer binds [below](#mod).
 
+### Mapping / unmapping windows and minimization
+
+A minimized window gets added to the minimized bar. The location of the minimized bar is determined through the configuration file and can be hot-changed with the appropriate binds. The height of the minimized bar admits the same logic.
+
+An unmapped window still exists in the workspace but is completely invisible until it is remapped. Binds exist to unmap a window, remap the latest unmapped window, unmap the entire monitor, and remap the entire monitor.
+
+Unmapping windows can come in handy if a windows destruction is unclean, for example if a force kill leaves a bugged window with just a border. This would normally leave a workspace uninhabitable if not for the unmap bind.
+
 ### Configuration
 
 Angel is configured by placing a `angel.conf` inside `$HOME/.config/angel`. An example configuration file is found in `angel/configs`
@@ -373,6 +381,26 @@ Binds are specified via
 
 ```
 bind <key-combo> <action-identifier>
+```
+
+#### A quick note about binding special symbols
+
+At the moment, binds whose keys are symbols such as `,`,`.`,`@`,... are not able to be bound in the usual way
+
+```
+bind $mod-, <...> # Won't work
+```
+
+A simple solution would be to let any bind specifier be a string (except variables). For example,
+
+```
+bind $mod-"," <...>
+```
+
+However, I regret to inform that this mechanism is not yet implemented. A temporary workaround is to make the entire bind a string, although as there is no interpolation variable expansion cannot be performed.
+
+```
+bind "super-," <...> # Will work
 ```
 
 The action-identifiers are 
