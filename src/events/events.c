@@ -1048,6 +1048,10 @@ void action_resize_right(const XKeyEvent* key_event) {
 
 void action_toggle_fullscreen(const XKeyEvent* key_event) {
     Client* focus = get_current_focus();
+
+    if (focus == NULL)
+        return;
+
     int workspace = get_client_on_workspace(focus);
     _Bool fullscreen = client_is_fullscreen(focus);
     Monitor* monitor = reconcile_monitor_from_focus(workspace, focus);
