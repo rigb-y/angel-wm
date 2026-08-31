@@ -1608,7 +1608,7 @@ void action_move_win_monitor(GetAdjacentMonitorFn get_adjacent, Time time) {
         focus
     );
 
-    if (focus == get_monitor_fullscreen(curr_monitor)) return;
+    _Bool was_fullscreen = get_monitor_fullscreen(curr_monitor) == focus;
 
     Monitor* move_to_monitor = get_adjacent(
         get_workspace_monitors(get_current_workspace()),
@@ -1623,6 +1623,11 @@ void action_move_win_monitor(GetAdjacentMonitorFn get_adjacent, Time time) {
         get_client_win(focus),
         get_monitor_name(move_to_monitor)
     );
+
+    if (was_fullscreen) {
+        set_monitor_fullscreen(curr_monitor, NULL);
+        set_monitor_fullscreen(move_to_monitor, focus);
+    }
 
     arrange_monitor(curr_monitor, time, NO_JUSTIFY_FOCUS);
     arrange_monitor(move_to_monitor, time, NO_JUSTIFY_FOCUS);
