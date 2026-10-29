@@ -91,6 +91,8 @@ static const IdentifierStringPair ident_str_to_ident_type[] = {
     {"tile_master_right_monocle", IDENT_TILE_MASTER_RIGHT_MONOCLE},
     {"tile_master_master_left", IDENT_TILE_MASTER_MASTER_LEFT},
     {"tile_master_master_right", IDENT_TILE_MASTER_MASTER_RIGHT},
+    {"switch-to-wnext", IDENT_SWITCH_TO_WNEXT},
+    {"switch-to-wprev", IDENT_SWITCH_TO_WPREV},
     {"switch-to-w1", IDENT_SWITCH_TO_W1},
     {"switch-to-w2", IDENT_SWITCH_TO_W2},
     {"switch-to-w3", IDENT_SWITCH_TO_W3},

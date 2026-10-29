@@ -466,6 +466,8 @@ Action                      | Description                                       
 `minimize-right`            | Position the minimized window area on the right      |
 `minimize-top`              | Position the minimized window area at the top        |
 `minimize-bottom`           | Position the minimized window area at the bottom     |
+`switch-to-wnext`           | Switch to next workspace                             |
+`switch-to-wprev`           | Switch to previous workspace                         |
 `switch-to-w1`              | Switch to workspace 1                                |
 `switch-to-w2`              | Switch to workspace 2                                |
 `switch-to-w3`              | Switch to workspace 3                                |

@@ -270,6 +270,8 @@ static const IdentifierActionPair ident_type_to_action_fn[] = {
     {IDENT_TILE_MASTER_RIGHT_MONOCLE, action_tile_master_right_monocle},
     {IDENT_TILE_MASTER_MASTER_LEFT, action_tile_master_master_left},
     {IDENT_TILE_MASTER_MASTER_RIGHT, action_tile_master_master_right},
+    {IDENT_SWITCH_TO_WNEXT, action_switch_to_workspace_next},
+    {IDENT_SWITCH_TO_WPREV, action_switch_to_workspace_prev},
     {IDENT_SWITCH_TO_W1, action_switch_to_workspace_one},
     {IDENT_SWITCH_TO_W2, action_switch_to_workspace_two},
     {IDENT_SWITCH_TO_W3, action_switch_to_workspace_three},

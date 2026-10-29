@@ -81,6 +81,8 @@ void action_switch_to_workspace_seven(const XKeyEvent*);
 void action_switch_to_workspace_eight(const XKeyEvent*);
 void action_switch_to_workspace_nine(const XKeyEvent*);
 void action_switch_to_workspace_ten(const XKeyEvent*);
+void action_switch_to_workspace_next(const XKeyEvent*);
+void action_switch_to_workspace_prev(const XKeyEvent*);
 void action_move_to_workspace_one(const XKeyEvent*);
 void action_move_to_workspace_two(const XKeyEvent*);
 void action_move_to_workspace_three(const XKeyEvent*);

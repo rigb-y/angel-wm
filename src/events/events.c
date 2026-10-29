@@ -1394,6 +1394,16 @@ void action_switch_to_workspace_ten(const XKeyEvent* key_event) {
     action_switch_workspace(9);
 }
 
+void action_switch_to_workspace_next(const XKeyEvent* key_event){
+    int next = (get_current_workspace() + 1) % N_WORKSPACES;
+    action_switch_workspace(next);
+}
+
+void action_switch_to_workspace_prev(const XKeyEvent* key_event){
+    int prev = (get_current_workspace() + N_WORKSPACES - 1) % N_WORKSPACES;
+    action_switch_workspace(prev);
+}
+
 void action_move_to_workspace_one(const XKeyEvent* key_event) {
     if (get_current_workspace() == 0) return;
     action_move_to_workspace(0, key_event->time);
