@@ -403,24 +403,26 @@ Binds are specified via
 bind <key-combo> <action-identifier>
 ```
 
-#### A quick note about binding special symbols
+#### Binding special symbols
 
-At the moment, binds whose keys are symbols such as `,`,`.`,`@`,... are not able to be bound in the usual way
+At the moment, binds whose keys are symbols such as `,`,`.`,`@`,... are not able to be bound with symbols directly:
 
 ```
 bind $mod-, <...> # Won't work
+bind $mod-. <...> # Won't work
 ```
 
-A simple solution would be to let any bind specifier be a string (except variables). For example,
+Instead, use the name of the symbols:
 
 ```
-bind $mod-"," <...>
+bind $mod-comma <...> # Will work
+bind $mod-period <...> # Will work
 ```
 
-However, I regret to inform that this mechanism is not yet implemented. A temporary workaround is to make the entire bind a string, although as there is no interpolation variable expansion cannot be performed.
+Or quote the entire bind. However, when using this strategy variable expansion cannot be performed.
 
 ```
-bind "super-," <...> # Will work
+bind "super-," <...> # Will work but can't use `$mod` here
 ```
 
 The action-identifiers are 
