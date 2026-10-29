@@ -17,7 +17,6 @@
 #define DEFAULT_MOD SUPER
 
 extern const KeySym key_syms[];
-extern KeyCode key_codes[];
 
 int get_modifier();
 void set_modifier(int);
@@ -26,7 +25,6 @@ int get_modifier_from_str(const char*);
 void init_keyboard();
 void establish_root_passive_key_grab(KeySym, unsigned int);
 void establish_root_passive_key_grabs();
-void get_keycodes();
 KeyCode get_keycode(KeySym);
 KeySym get_keysym(KeyCode);
 void ungrab_all_root_passive_grabs();

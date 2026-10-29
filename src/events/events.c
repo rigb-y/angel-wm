@@ -368,7 +368,6 @@ void handle_mapping_notify(const XEvent* event) {
 
     refresh_keyboard(mapping_event);
     ungrab_all_root_passive_grabs();
-    get_keycodes();
     establish_root_passive_key_grabs();
 }
 

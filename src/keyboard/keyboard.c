@@ -10,45 +10,12 @@
 
 #define XK_TECHNICAL
 
+#include <X11/XKBlib.h>
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <string.h>
 
 static int modifier = DEFAULT_MOD;
-
-const KeySym key_syms[] = {
-    XK_a, XK_A, XK_b, XK_B,
-    XK_c, XK_C, XK_d, XK_D,
-    XK_e, XK_E, XK_f, XK_F,
-    XK_g, XK_G, XK_h, XK_H,
-    XK_i, XK_I, XK_j, XK_J,
-    XK_k, XK_K, XK_l, XK_L,
-    XK_m, XK_M, XK_n, XK_N,
-    XK_o, XK_O, XK_p, XK_P,
-    XK_q, XK_Q, XK_r, XK_R,
-    XK_s, XK_S, XK_t, XK_T,
-    XK_u, XK_U, XK_v, XK_V,
-    XK_w, XK_W, XK_x, XK_X,
-    XK_y, XK_Y, XK_z, XK_Z,
-    XK_1, XK_2, XK_3, XK_4,
-    XK_5, XK_6, XK_7, XK_8,
-    XK_9, XK_0, XK_space, XK_Return,
-    XK_Tab, XK_uparrow, XK_downarrow,
-    XK_leftarrow, XK_rightarrow, 
-    XK_semicolon, XK_space, XK_exclam,
-    XK_quotedbl, XK_numbersign, XK_dollar,
-    XK_percent, XK_ampersand, XK_apostrophe,
-    XK_quoteright, XK_parenleft, XK_parenright,
-    XK_asterisk, XK_plus, XK_comma,
-    XK_minus, XK_period, XK_slash,
-    XK_colon, XK_less, XK_equal,
-    XK_greater, XK_question, XK_at,
-    XK_bracketleft, XK_backslash, XK_bracketright,
-    XK_asciicircum, XK_underscore, XK_grave,
-    XK_braceleft, XK_bar, XK_braceright, XK_asciitilde,
-};
-
-KeyCode key_codes[ARRAY_SIZE(key_syms)];
 
 typedef struct StringKeySymPair {
     const char* str;
@@ -116,18 +83,10 @@ int get_modifier_from_str(const char* s) {
     return UNKNOWN_MODIFIER;
 }
 
-static int key_syms_index(KeySym);
 static void establish_rpgs_from_action_list(ActionBind*);
 static void establish_rpgs_from_command_list(CommandBind*);
 
-void get_keycodes() {
-    for (int i = 0; i < ARRAY_SIZE(key_syms); ++i) {
-        key_codes[i] = get_keycode(key_syms[i]);
-    }
-}
-
 void init_keyboard() {
-    get_keycodes();
     set_default_binds();
 }
 
@@ -195,22 +154,12 @@ void establish_root_passive_key_grab(KeySym key, unsigned int state) {
     );
 }
 
-int key_code_index(KeyCode code) {
-    for (int i = 0; i < ARRAY_SIZE(key_codes); ++i) {
-        if (key_codes[i] == code)
-            return i;
-    }
-    return -1;
-}
-
 KeyCode get_keycode(KeySym ks) {
     return XKeysymToKeycode(dp, ks);
 }
 
 KeySym get_keysym(KeyCode kc) {
-    return key_code_index(kc) != -1 
-        ? key_syms[key_code_index(kc)] 
-        : XK_A;
+    return XkbKeycodeToKeysym(dp, kc, 0, 0);
 }
 
 void refresh_keyboard(const XMappingEvent* mapping_event) {
