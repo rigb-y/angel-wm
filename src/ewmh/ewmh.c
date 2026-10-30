@@ -356,3 +356,31 @@ _Bool ewmh_read_property(
     *data = ((unsigned long*)prop);
     return true;
 }
+
+void ewmh_set_client_list(const Window* wins, int n) {
+    XChangeProperty(
+        dp,
+        root,
+        net_client_list,
+        XA_WINDOW,
+        32,
+        PropModeReplace,
+        (const unsigned char*)wins,
+        n
+    );
+}
+
+void ewmh_set_desktop_names() {
+    static const char names[] = "1\0002\0003\0004\0005\0006\0007\0008\0009\00010";
+    Atom utf8 = XInternAtom(dp, "UTF8_STRING", False);
+    Atom prop = XInternAtom(dp, "_NET_DESKTOP_NAMES", False);
+    XChangeProperty(
+        dp,
+        root,
+        prop,
+        utf8,
+        8,
+        PropModeReplace,
+        (const unsigned char*)names, sizeof(names)
+    );
+}

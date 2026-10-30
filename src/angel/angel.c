@@ -125,6 +125,7 @@ int prologue() {
 
     int ws = ewmh_get_current_desktop();
     ewmh_advertise_number_of_desktops();
+    ewmh_set_desktop_names();
     ewmh_set_current_desktop(ws);
     set_current_workspace(ws);
     write_ws_state(ws);

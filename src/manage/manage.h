@@ -13,6 +13,7 @@
 typedef struct Client Client;
 typedef struct Monitor Monitor;
 
+void update_client_list();
 void start_manage(Window, XWindowAttributes*, Monitor*);
 _Bool is_managed(Window);
 Client* get_managed(Window);

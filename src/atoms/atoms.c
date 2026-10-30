@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2026 rigb-y 
+ * Copyright (c) 2026 rigb-y
  * SPDX-License-Identifier: MIT
  */
 
@@ -22,6 +22,7 @@ Atom net_wm_strut_partial;
 Atom net_number_of_desktops;
 Atom net_current_desktop;
 Atom net_active_window;
+Atom net_client_list;
 
 void set_atoms() {
     wm_protocols = XInternAtom(dp, "WM_PROTOCOLS", false);
@@ -37,4 +38,5 @@ void set_atoms() {
     net_number_of_desktops = XInternAtom(dp, "_NET_NUMBER_OF_DESKTOPS", false);
     net_current_desktop = XInternAtom(dp, "_NET_CURRENT_DESKTOP", false);
     net_active_window = XInternAtom(dp, "_NET_ACTIVE_WINDOW", false);
+    net_client_list = XInternAtom(dp, "_NET_CLIENT_LIST", false);
 }

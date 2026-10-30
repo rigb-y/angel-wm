@@ -3,25 +3,26 @@
  * SPDX-License-Identifier: MIT
  */
 
-#include "manage.h"
-#include "client.h"
+#include "angel.h"
 #include "client_list.h"
-#include "workspaces.h"
-#include "windows.h"
-#include "focus_stack.h"
-#include "events.h"
+#include "client.h"
 #include "detached.h"
+#include "docks.h"
+#include "events.h"
+#include "ewmh.h"
 #include "float_list.h"
+#include "focus_stack.h"
+#include "icccm.h"
+#include "manage.h"
 #include "minimized_client.h"
 #include "minimized_list.h"
-#include "icccm.h"
+#include "monitor.h"
+#include "monitors.h"
+#include "types.h"
 #include "unmapped_client.h"
 #include "unmapped_list.h"
-#include "types.h"
-#include "ewmh.h"
-#include "monitors.h"
-#include "monitor.h"
-#include "docks.h"
+#include "windows.h"
+#include "workspaces.h"
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -34,6 +35,8 @@ static FocusStart focus_start = FOCUS_START_ADJACENT;
 static FocusEnd focus_end = FOCUS_END_NEXT;
 
 static Client* search_for_client(Window, Monitor**);
+
+static _Bool end_manage_impl(Window);
 
 static void start_manage_unmapped_float(Monitor*, Client*);
 static void start_manage_unmapped_tiled(Monitor*, Client*);
@@ -204,6 +207,40 @@ void start_manage_dock(Monitor* monitor, Client* client) {
     start_manage_unmapped_dock(correct_monitor, client);
 }
 
+void update_client_list() {
+    Window root_return, parent_return;
+    Window* children = NULL;
+    unsigned int nchildren = 0;
+
+    if (!XQueryTree(
+        dp,
+        root,
+        &root_return,
+        &parent_return,
+        &children,
+        &nchildren)
+    ){
+        return;
+    }
+
+    Window* managed = malloc((nchildren + 1) * sizeof(Window));
+    if (managed == NULL) {
+        if (children != NULL) XFree(children);
+        return;
+    }
+
+    int n = 0;
+    for (unsigned int i = 0; i < nchildren; ++i)
+        if (is_managed(children[i])) {
+            managed[n++] = children[i];
+        }
+
+    ewmh_set_client_list(managed, n);
+
+    free(managed);
+    if (children != NULL) XFree(children);
+}
+
 void start_manage(Window win, XWindowAttributes* attrs, Monitor* start_monitor) {
     if (attrs == NULL) return;
 
@@ -277,6 +314,7 @@ void start_manage(Window win, XWindowAttributes* attrs, Monitor* start_monitor) 
 
     set_wm_state(win, NormalState);
     free((char*)win_name);
+    update_client_list();
 }
 
 _Bool is_managed(Window win) {
@@ -302,7 +340,7 @@ Client* search_for_client(Window win, Monitor** monitor_return) {
     return NULL;
 } 
 
-_Bool end_manage(Window win) {
+_Bool end_manage_impl(Window win) {
     Monitor* monitor = NULL;
     Client* client = search_for_client(win, &monitor);
     if (client == NULL || monitor == NULL)
@@ -414,4 +452,12 @@ _Bool end_manage(Window win) {
         );
 
     return true;
+}
+
+_Bool end_manage(Window win) {
+    _Bool removed = end_manage_impl(win);
+    if (removed) {
+        update_client_list();
+    }
+    return removed;
 }

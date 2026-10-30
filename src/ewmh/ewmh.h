@@ -40,5 +40,8 @@ void ewmh_advertise_number_of_desktops();
 int ewmh_get_current_desktop();
 void ewmh_set_current_desktop(int);
 void ewmh_set_active_window(Window);
+void ewmh_set_client_list(const Window* wins, int n);
+void ewmh_set_desktop_names();
+
 
 #endif

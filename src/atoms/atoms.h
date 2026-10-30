@@ -22,6 +22,7 @@ extern Atom net_wm_strut_partial;
 extern Atom net_number_of_desktops;
 extern Atom net_current_desktop;
 extern Atom net_active_window;
+extern Atom net_client_list;
 
 void set_atoms();
 
