@@ -37,6 +37,7 @@ void handle_mapping_notify(const XEvent*);
 void handle_configure_request(const XEvent*);
 void handle_screen_change_notify(const XEvent*);
 void handle_rr_notify(const XEvent*);
+void handle_client_message(const XEvent*);
 
 void dispatch_keybind(const XKeyEvent*, const KeyMap*);
 void action_noop(const XKeyEvent*);

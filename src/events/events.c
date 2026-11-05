@@ -4,37 +4,38 @@
  */
 
 #include "angel.h"
-#include "geometry.h"
-#include "events.h"
 #include "angel.h"
-#include "windows.h"
-#include "keymaps.h"
-#include "terminal.h"
-#include "manage.h"
-#include "client.h"
-#include "workspaces.h"
-#include "motion_tree.h"
-#include "node.h"
-#include "types.h"
+#include "atoms.h"
 #include "client_list.h"
-#include "focus_stack.h"
-#include "pointer.h"
+#include "client.h"
 #include "detached.h"
+#include "docks.h"
+#include "events.h"
+#include "ewmh.h"
 #include "float_list.h"
+#include "focus_stack.h"
+#include "focus.h"
+#include "geometry.h"
+#include "icccm.h"
+#include "keyboard.h"
+#include "keymaps.h"
+#include "manage.h"
 #include "minimized_client.h"
 #include "minimized_list.h"
+#include "monitor.h"
+#include "monitors.h"
+#include "motion_tree.h"
+#include "node.h"
+#include "pointer.h"
+#include "randr.h"
 #include "shell.h"
-#include "keyboard.h"
-#include "utils.h"
-#include "icccm.h"
+#include "terminal.h"
+#include "types.h"
 #include "unmapped_client.h"
 #include "unmapped_list.h"
-#include "ewmh.h"
-#include "monitors.h"
-#include "monitor.h"
-#include "focus.h"
-#include "randr.h"
-#include "docks.h"
+#include "utils.h"
+#include "windows.h"
+#include "workspaces.h"
 #include "wspipe.h"
 
 #include <X11/Xlib.h>
@@ -59,12 +60,13 @@ static const EventMap event_maps[] = {
     {DestroyNotify, handle_destroy_notify},
     {ButtonPress, handle_button_press},
     {ButtonRelease, handle_button_release},
-    {MotionNotify, handle_motion_notify}, 
-    {MapNotify, handle_map_notify}, 
+    {MotionNotify, handle_motion_notify},
+    {MapNotify, handle_map_notify},
     {FocusIn, handle_focus_change},
     {FocusOut, handle_focus_change},
     {MappingNotify, handle_mapping_notify},
-    {ConfigureRequest, handle_configure_request}, 
+    {ConfigureRequest, handle_configure_request},
+    {ClientMessage, handle_client_message},
 };
 
 static Client* MUST_LEAVE = NULL;
@@ -663,6 +665,12 @@ void handle_destroy_notify(const XEvent* event) {
 
     if (end_manage(win))
         arrange_monitor(monitor, CurrentTime, NO_JUSTIFY_FOCUS);
+}
+
+void handle_client_message(const XEvent* event) {
+    const XClientMessageEvent* msg = &event->xclient;
+    if (msg->window != root || msg->message_type != net_current_desktop) return;
+    action_switch_workspace((int)msg->data.l[0]);
 }
 
 void action_noop(const XKeyEvent*) { return; }
