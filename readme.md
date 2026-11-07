@@ -327,6 +327,8 @@ Uses 1% the height of the monitor with the smallest height.
 The possible sets are 
 
 ```
+set smart-gaps = ...
+set smart-borders = ...
 set gap = ...
 set focused-border-width = ...
 set unfocused-border-width = ...
@@ -345,7 +347,18 @@ set minimized-position = ...
 set default-workspace-layout = ...
 ```
 
-Non-numeric quantities are given to `minimized-position` and `default-workspace-layout`. `minimized-position` can be one of `top`, `bottom`, `left`, `right`. The behavior of default-workspace-layout is described above.
+Non-numeric quantities are given to `minimized-position` and `default-workspace-layout`. `minimized-position` can be one of `top`, `bottom`, `left`, `right`. The behavior of default-workspace-layout is described above. `smart-gaps` and `smart-borders` take a boolean: `true` or `false`.
+
+#### Smart gaps and borders
+
+When a monitor holds exactly one tiled window, Angel can remove that window's gap and border so it fills the screen. Both options are `true` by default and are controlled independently.
+
+set smart-gaps = true      # remove the gap around a lone tiled window
+set smart-borders = false  # keep the border on a lone tiled window
+
+Only tiled windows count. Floating and minimized windows are not counted, so a single tiled window next to a floating window still loses its gap and border. The gap and border come back as soon as a second tiled window appears. Fullscreen and resize-mode windows keep their borders.
+
+Set either option to `false` to always keep the gap or border.
 
 #### Colors
 
