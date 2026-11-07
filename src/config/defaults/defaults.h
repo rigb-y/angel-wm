@@ -34,6 +34,9 @@ typedef struct DefaultConfig {
     unsigned int default_monocle_border_width;
     unsigned int default_fs_border_width;
 
+    _Bool default_smart_gaps;
+    _Bool default_smart_borders;
+
     unsigned int default_gap;
     unsigned int default_gap_inc;
     unsigned int default_resize_inc;
@@ -106,6 +109,8 @@ _Bool set_default_float_border_width(int);
 _Bool set_default_minimized_border_width(int);
 _Bool set_default_monocle_border_width(int);
 _Bool set_default_fs_border_width(int);
+_Bool set_default_smart_gaps(_Bool);
+_Bool set_default_smart_borders(_Bool);
 _Bool set_default_gap(int);
 _Bool set_default_gap_inc(int);
 _Bool set_default_resize_inc(int);
@@ -131,6 +136,8 @@ _Bool override_default_float_border_width(const OverrideParameters*);
 _Bool override_default_minimized_border_width(const OverrideParameters*);
 _Bool override_default_monocle_border_width(const OverrideParameters*);
 _Bool override_default_fs_border_width(const OverrideParameters*);
+_Bool override_default_smart_gaps(const OverrideParameters*);
+_Bool override_default_smart_borders(const OverrideParameters*);
 _Bool override_default_gap(const OverrideParameters*);
 _Bool override_default_gap_inc(const OverrideParameters*);
 _Bool override_default_resize_inc(const OverrideParameters*);
@@ -159,6 +166,8 @@ unsigned int get_default_monocle_border_width();
 unsigned int get_default_fs_border_width();
 unsigned int get_default_resize_inc();
 unsigned int get_default_minimized_height_inc();
+_Bool get_default_smart_gaps();
+_Bool get_default_smart_borders();
 unsigned int get_default_gap();
 unsigned int get_default_gap_inc();
 int get_default_float_move_step();

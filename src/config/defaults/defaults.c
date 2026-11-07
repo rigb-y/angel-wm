@@ -187,6 +187,16 @@ _Bool validate_border_width(int* bw) {
     return false;
 }
 
+_Bool set_default_smart_gaps(_Bool value) {
+	defaults.default_smart_gaps = value;
+	return true;
+}
+
+_Bool set_default_smart_borders(_Bool value) {
+	defaults.default_smart_borders = value;
+	return true;
+}
+
 _Bool set_default_gap(int gap) {
     if (gap < 0) {
         lerr("Bad gap. Adjusting to 0");
@@ -413,6 +423,14 @@ _Bool override_default_fs_border_width(const OverrideParameters* op) {
 	return st;
 }
 
+_Bool override_default_smart_gaps(const OverrideParameters* op) {
+	return set_default_smart_gaps(get_override_n(op) != 0);
+}
+
+_Bool override_default_smart_borders(const OverrideParameters* op) {
+	return set_default_smart_borders(get_override_n(op) != 0);
+}
+
 _Bool override_default_gap(const OverrideParameters* op) {
 	_Bool st = set_default_gap(get_override_n(op));
 	set_gap(get_default_gap());
@@ -548,6 +566,14 @@ unsigned int get_default_fs_border_width() {
 	return defaults.default_fs_border_width;
 }
 
+_Bool get_default_smart_gaps() {
+	return defaults.default_smart_gaps;
+}
+
+_Bool get_default_smart_borders() {
+	return defaults.default_smart_borders;
+}
+
 unsigned int get_default_gap() {
 	return defaults.default_gap;
 }
@@ -645,6 +671,8 @@ void set_defaults() {
     set_default_resize_border_width(5);
     set_default_monocle_border_width(5);
     set_default_fs_border_width(1);
+		set_default_smart_gaps(true);
+		set_default_smart_borders(true);
     set_default_gap(10);
     set_default_float_move_step(15);
     set_default_resize_inc(15);
