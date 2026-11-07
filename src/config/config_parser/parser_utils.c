@@ -51,7 +51,9 @@ static const IdentifierType valid_defines[] = {
 static const IdentifierType valid_sets[] = {
     IDENT_GAP, IDENT_FULLSCREEN_BORDER_WIDTH,
     IDENT_WINDOW_RESIZE_INC, IDENT_FLOAT_MOVE_STEP,
-    IDENT_DEFAULT_WORKSPACE_LAYOUT, 
+    IDENT_DEFAULT_WORKSPACE_LAYOUT,
+    IDENT_SMART_BORDERS,
+    IDENT_SMART_GAPS,
     IDENT_FOCUSED_BORDER_WIDTH,
     IDENT_UNFOCUSED_BORDER_WIDTH,
     IDENT_RESIZE_BORDER_WIDTH,
@@ -221,6 +223,8 @@ static const IdentifierOverrideFnPair ident_type_to_override_fn[] = {
     {IDENT_DEFAULT_WORKSPACE_LAYOUT, override_default_layout},
     {IDENT_MINIMIZED_HEIGHT, override_default_minimized_height},
     {IDENT_RESIZE_BORDER, override_default_resize_border},
+    {IDENT_SMART_GAPS, override_default_smart_gaps},
+    {IDENT_SMART_BORDERS, override_default_smart_borders},
     {IDENT_FOCUSED_BORDER, override_default_focused_border},
     {IDENT_UNFOCUSED_BORDER, override_default_unfocused_border},
     {IDENT_FLOAT_BORDER, override_default_float_border},
@@ -527,7 +531,13 @@ void reconcile_ident_value(
         || term_name == NULL
     ) return;
 
-    if (is_minimized_position_identifier(token))
+    if (get_token_identifier_type(token) == IDENT_TRUE)
+        *n = 1;
+
+    else if (get_token_identifier_type(token) == IDENT_FALSE)
+        *n = 0;
+
+    else if (is_minimized_position_identifier(token))
         *n = get_minimized_position_from_ident_type(token);
 
     else if (is_focus_start_position_identifier(token))

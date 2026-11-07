@@ -4,31 +4,32 @@
  */
 
 #include "angel.h"
-#include "geometry.h"
-#include "client.h"
 #include "client_list.h"
-#include "motion_tree.h"
-#include "workspaces.h"
-#include "node.h"
+#include "client.h"
 #include "colors.h"
-#include "logging.h"
-#include "utils.h"
-#include "types.h"
-#include "windows.h"
-#include "focus_stack.h"
-#include "utils.h"
+#include "defaults.h"
 #include "detached.h"
+#include "docks.h"
 #include "float_list.h"
+#include "focus_stack.h"
+#include "geometry.h"
+#include "icccm.h"
 #include "layouts.h"
+#include "logging.h"
 #include "minimized_client.h"
 #include "minimized_list.h"
-#include "icccm.h"
 #include "monitor.h"
 #include "monitors.h"
+#include "motion_tree.h"
+#include "node.h"
 #include "pointer.h"
-#include "docks.h"
+#include "pointer.h"
+#include "types.h"
+#include "utils.h"
+#include "utils.h"
 #include "windows.h"
-#include "pointer.h"
+#include "windows.h"
+#include "workspaces.h"
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -179,6 +180,9 @@ static void clamp_minimized_height(Monitor*, int);
 
 static void reserve_space_for_nonparital_struts(const Strut*, int, int);
 static void reserve_space_for_partial_struts(const Strut*, int, int);
+
+static _Bool is_sole_tiled_client(Monitor*, const Client*);
+static _Bool smart_gaps_apply(Monitor*);
 
 void set_min_gap_while_policing(int gap) {
     if (gap < 0) return;
@@ -567,6 +571,18 @@ int get_max_floater_height(Monitor* monitor, const Client* client) {
     return height_hint_in_bounds(monitor, client, max_hint) ? max_hint : raw_max;
 }
 
+_Bool is_sole_tiled_client(Monitor* monitor, const Client* client) {
+    if (monitor == NULL || client == NULL) return false;
+
+    ClientList* cl = get_monitor_cl(monitor);
+    return cl_size(cl) == 1 && cl_find_client(cl, client) != NULL;
+}
+
+_Bool smart_gaps_apply(Monitor* monitor) {
+    if (monitor == NULL || !get_default_smart_gaps()) return false;
+    return cl_size(get_monitor_cl(monitor)) == 1;
+}
+
 Color get_border_color(const Client* client) {
     if (client_is_fullscreen(client)) {
         return get_fs_border_color();
@@ -598,6 +614,16 @@ unsigned int get_border_width(const Client* client) {
 
     if (get_client_in_resize_mode(client))
         return get_resize_border_width();
+
+    if (get_default_smart_borders() &&
+        is_sole_tiled_client(
+            get_monitor_from_list_membership(
+                get_workspace_monitors(get_current_workspace()),
+                client
+            ),
+            client
+        )
+    ) return 0;
 
     if (in_monocle_stack(
             get_monitor_from_list_membership(
@@ -1502,6 +1528,8 @@ _Bool geometry_out_of_bounds(Monitor* monitor, int width, int height) {
 }
 
 _Bool police_gap(Monitor* monitor) {
+    if (smart_gaps_apply(monitor)) return false;
+
     Client* curr = cl_head(get_monitor_cl(monitor));
 
     int gap_change = 0;
@@ -1554,7 +1582,8 @@ _Bool fast_tile(
         unsigned int border_width = get_border_width(alone);
         Color unfocused_border_color = get_unfocused_border_color();
         Color focused_border_color = get_focused_border_color();
-        unsigned int gap = get_gap();
+        unsigned int gap = (get_default_smart_gaps() &&
+            is_sole_tiled_client(monitor, alone)) ? 0 : get_gap();
 
         int initial_x = start_x + gap;
         int initial_y = start_y + gap;
