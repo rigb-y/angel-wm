@@ -181,7 +181,8 @@ static void clamp_minimized_height(Monitor*, int);
 static void reserve_space_for_nonparital_struts(const Strut*, int, int);
 static void reserve_space_for_partial_struts(const Strut*, int, int);
 
-static _Bool is_sole_tiled_client(Monitor*, const Client*);
+static _Bool monitor_is_monocle(Monitor*);
+static _Bool client_has_smart_borders(Monitor*, const Client*);
 static _Bool smart_gaps_apply(Monitor*);
 
 void set_min_gap_while_policing(int gap) {
@@ -571,16 +572,25 @@ int get_max_floater_height(Monitor* monitor, const Client* client) {
     return height_hint_in_bounds(monitor, client, max_hint) ? max_hint : raw_max;
 }
 
-_Bool is_sole_tiled_client(Monitor* monitor, const Client* client) {
+_Bool monitor_is_monocle(Monitor* monitor) {
+    if (monitor == NULL) return false;
+    return get_monitor_layout(monitor, get_current_workspace())
+        == ANGEL_MONOCLE;
+}
+
+_Bool client_has_smart_borders(Monitor* monitor, const Client* client) {
     if (monitor == NULL || client == NULL) return false;
 
     ClientList* cl = get_monitor_cl(monitor);
-    return cl_size(cl) == 1 && cl_find_client(cl, client) != NULL;
+    if (cl_find_client(cl, client) == NULL) return false;
+
+    return cl_size(cl) == 1 || monitor_is_monocle(monitor);
 }
 
 _Bool smart_gaps_apply(Monitor* monitor) {
     if (monitor == NULL || !get_default_smart_gaps()) return false;
-    return cl_size(get_monitor_cl(monitor)) == 1;
+    return cl_size(get_monitor_cl(monitor)) == 1
+        || monitor_is_monocle(monitor);
 }
 
 Color get_border_color(const Client* client) {
@@ -615,8 +625,11 @@ unsigned int get_border_width(const Client* client) {
     if (get_client_in_resize_mode(client))
         return get_resize_border_width();
 
+    if (client_is_float(client))
+        return get_float_border_width();
+
     if (get_default_smart_borders() &&
-        is_sole_tiled_client(
+        client_has_smart_borders(
             get_monitor_from_list_membership(
                 get_workspace_monitors(get_current_workspace()),
                 client
@@ -635,9 +648,6 @@ unsigned int get_border_width(const Client* client) {
     ) {
         return get_monocle_border_width();
     }
-
-    if (client_is_float(client))
-        return get_float_border_width();
 
     if (client != get_current_focus())
         return get_unfocused_border_width();
@@ -1583,7 +1593,7 @@ _Bool fast_tile(
         Color unfocused_border_color = get_unfocused_border_color();
         Color focused_border_color = get_focused_border_color();
         unsigned int gap = (get_default_smart_gaps() &&
-            is_sole_tiled_client(monitor, alone)) ? 0 : get_gap();
+            client_has_smart_borders(monitor, alone)) ? 0 : get_gap();
 
         int initial_x = start_x + gap;
         int initial_y = start_y + gap;
@@ -2456,9 +2466,10 @@ void tile_monocle_custom(
     Client* curr = start;
     MTNode* curr_parent = mt_root(mt);
 
-    int cx = start_x + get_gap(), cy = start_y + get_gap();
-    int cw = width_available - 2*get_gap() - 2*get_border_width(curr);
-    int ch = height_available - 2*get_gap() - 2*get_border_width(curr);
+    int gap = smart_gaps_apply(monitor) ? 0 : get_gap();
+    int cx = start_x + gap, cy = start_y + gap;
+    int cw = width_available - 2*gap - 2*get_border_width(curr);
+    int ch = height_available - 2*gap - 2*get_border_width(curr);
     while (curr != NULL) {
         set_client_position(curr, cx, cy);
         set_client_geometry(curr, cw, ch, get_monocle_border_width());
